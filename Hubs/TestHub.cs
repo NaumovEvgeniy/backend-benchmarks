@@ -30,7 +30,12 @@ namespace dotnet_benchmark.Hubs
         
         public async IAsyncEnumerable<string> ReceiveFile([EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            yield return _file;
+            for (var i = 0; i < 1000; i++)
+            {
+                yield return _file;
+            }
+
+            await Clients.Caller.SendAsync("FinishReceiveFile", cancellationToken);
         }
     }
 }

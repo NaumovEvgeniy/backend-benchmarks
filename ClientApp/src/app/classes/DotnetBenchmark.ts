@@ -44,7 +44,6 @@ export class DotnetBenchmark implements IBenchmark {
 	}
 
 	async closeSocket(): Promise<void>{
-		this.uploadAudioSubject.complete();
 		await this.connection.stop();
 	}
 }
