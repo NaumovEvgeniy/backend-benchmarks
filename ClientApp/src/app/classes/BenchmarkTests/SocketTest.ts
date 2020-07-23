@@ -22,11 +22,13 @@ export class SocketTest implements ITest {
 	async doTest(testClass: IBenchmark): Promise<BenchmarkTestResult<SocketBenchmarkResult>> {
 		const startTime = new Date().getTime();
 		await testClass.initSocket();
-
 		const uploadTime = await this.upload(testClass);
-		const downloadTime = await this.download(testClass);
-
 		await testClass.closeSocket();
+
+		await testClass.initSocket();
+		const downloadTime = await this.download(testClass);
+		await testClass.closeSocket();
+
 		const endTime = new Date().getTime();
 		return new BenchmarkTestResult<SocketBenchmarkResult>(endTime - startTime, new SocketBenchmarkResult(uploadTime, downloadTime));
 	}
@@ -36,8 +38,8 @@ export class SocketTest implements ITest {
 		const timeBeforeUpload = new Date().getTime();
 		for(let i = 0; i < 1000; i++){
 			await testClass.testUpload(binaryAudio);
-			break;
 		}
+		await testClass.finishUpload();
 		const timeAfterUpload = new Date().getTime();
 		return timeAfterUpload - timeBeforeUpload;
 	}

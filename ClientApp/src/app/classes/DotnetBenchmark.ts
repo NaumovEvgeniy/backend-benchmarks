@@ -40,7 +40,11 @@ export class DotnetBenchmark implements IBenchmark {
 	}
 
 	async testUpload(file: string): Promise<void> {
-		this.uploadAudioSubject.next(file);
+		await this.uploadAudioSubject.next(file);
+	}
+
+	async finishUpload(): Promise<void> {
+		this.uploadAudioSubject.complete();
 	}
 
 	async closeSocket(): Promise<void>{

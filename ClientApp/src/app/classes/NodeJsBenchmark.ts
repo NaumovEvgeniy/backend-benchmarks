@@ -26,4 +26,8 @@ export class NodeJsBenchmark implements IBenchmark {
 		return Promise.resolve(undefined);
 	}
 
+	finishUpload(): Promise<void> {
+		return Promise.resolve(undefined);
+	}
+
 }

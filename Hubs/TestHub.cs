@@ -23,9 +23,11 @@ namespace dotnet_benchmark.Hubs
         
         public async Task SendAudio(IAsyncEnumerable<string> stream)
         {
-            var enumerator = stream.GetAsyncEnumerator();
-            await enumerator.MoveNextAsync();
-            _file = enumerator.Current;
+            await foreach (var data in stream)
+            {
+                _file ??= data;
+            }
+            
         }
         
         public async IAsyncEnumerable<string> ReceiveFile([EnumeratorCancellation] CancellationToken cancellationToken)
