@@ -1,0 +1,42 @@
+<body>
+	<div class="container">
+		<h1>Тесты для {{ benchmark.getName() }}</h1>
+
+		<ul>
+			<li *ngFor="let test of tests">
+				<h4>{{ test.getDescription() }}</h4>
+
+				<div *ngTemplateOutlet="testResults.has(test) && testResults.get(test) ? testResult : startTestTemplate; context: {
+					itest: test
+				}">
+
+				</div>
+				<hr>
+			</li>
+		</ul>
+	</div>
+</body>
+
+<ng-template #testResult let-itest="itest">
+	<ul *ngIf="testResults.get(itest) as testResult">
+		<li>
+			<b>Время исполнения: </b>{{ testResult.time }} мс.
+		</li>
+		<li *ngFor="let r of testResult.additionalData.iterateResult() | keyvalue">
+			<b>{{ r.key }}: </b> {{ r.value }} мс.
+		</li>
+	</ul>
+
+	<div class="mt-4">
+		<ng-container *ngTemplateOutlet="startTestTemplate; context: {itest: itest}"></ng-container>
+	</div>
+</ng-template>
+
+<ng-template #startTestTemplate let-itest="itest">
+	<div>
+		<button (click)="startTest(itest)" class="btn btn-outline-primary" [disabled]="testResults.has(itest) && testResults.get(itest) === undefined">
+			<span *ngIf="testResults.has(itest) && testResults.get(itest) === undefined" class="spinner-border spinner-border-sm mr-3" role="status" aria-hidden="true"></span>
+			<span>Запустить тест</span>
+		</button>
+	</div>
+</ng-template>
