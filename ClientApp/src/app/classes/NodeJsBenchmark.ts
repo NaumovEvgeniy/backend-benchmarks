@@ -1,9 +1,10 @@
-import { IBenchmark } from "./IBenchmark";
-import { SocketBenchmarkResult } from "./SocketBenchmarkResult";
+import {IBenchmark} from "./IBenchmark";
+import {Socket} from 'ngx-socket-io';
+import {SocketBenchmarkResult} from "./SocketBenchmarkResult";
 
 export class NodeJsBenchmark implements IBenchmark {
 
-	constructor() {
+	constructor(private socket: Socket) {
 	}
 
 	getName(): string {
@@ -14,16 +15,23 @@ export class NodeJsBenchmark implements IBenchmark {
 		return Promise.resolve(undefined);
 	}
 
-	initSocket(): Promise<void> {
-		return Promise.resolve(undefined);
+	async initSocket(): Promise<void> {
+		this.socket.on('waitForDataFromServer', data => {console.log('data', data); return Promise.resolve(undefined)});
 	}
 
-	testDownload(): Promise<void> {
-		return Promise.resolve(undefined);
+
+	async testDownload(): Promise<void> {
+		this.socket.emit('getFileFromServer', data => {
+		});
+		return new Promise((resolve, reject) => {
+			this.socket.on('stopReceiving', data => {
+				resolve();
+			});
+		})
 	}
 
-	testUpload(file: string): Promise<void> {
-		return Promise.resolve(undefined);
+	async testUpload(file: string): Promise<void> {
+		await this.socket.emit('getFileFromClient', file);
 	}
 
 	finishUpload(): Promise<void> {

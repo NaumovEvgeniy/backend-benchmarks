@@ -8,6 +8,7 @@ import { SocketTest } from "./classes/BenchmarkTests/SocketTest";
 import { ITest } from "./classes/BenchmarkTests/ITest";
 import { BenchmarkTestResult } from "./classes/BenchmarkTests/BenchmarkTestResult";
 import { IIterableResult } from "./classes/IIterableResult";
+import { Socket } from 'ngx-socket-io';
 
 @Component({
 	selector: 'app-root',
@@ -24,11 +25,12 @@ export class AppComponent implements OnInit {
 	tests: ITest[] = [];
 
 	constructor(
-		socketTest: SocketTest
+		socketTest: SocketTest,
+		private socket: Socket
 	) {
 		// раскоментировать для теста nodejs
-		// this.benchmark = new NodeJsBenchmark();
-		this.benchmark = new DotnetBenchmark();
+		 this.benchmark = new NodeJsBenchmark(socket);
+		//this.benchmark = new DotnetBenchmark();
 
 		this.tests.push(socketTest);
 	}
